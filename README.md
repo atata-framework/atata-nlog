@@ -19,7 +19,7 @@
 
 Any feedback, issues and feature requests are welcome.
 
-If you faced an issue please report it to [Atata Issues](https://github.com/atata-framework/atata-nlog/issues),
+If you faced an issue please report it to [Atata.NLog Issues](https://github.com/atata-framework/atata-nlog/issues),
 [ask a question on Stack Overflow](https://stackoverflow.com/questions/ask?tags=atata+csharp) using [atata](https://stackoverflow.com/questions/tagged/atata) tag
 or use another [Atata Contact](https://atata.io/contact/) way.
 
