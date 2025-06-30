@@ -51,7 +51,7 @@ jobs:
       arguments: -c $(buildConfiguration) -s "azure-pipelines.runsettings" --no-build
   - task: PublishPipelineArtifact@1
     displayName: Publish test artifacts
-    condition: failed()
+    condition: succeededOrFailed()
     inputs:
       artifactName: Artifacts-$(imageName)
       targetPath: test/Atata.NLog.IntegrationTests/bin/$(buildConfiguration)/net9.0/artifacts
