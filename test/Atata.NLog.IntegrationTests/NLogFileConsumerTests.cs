@@ -22,7 +22,7 @@ public sealed class NLogFileConsumerTests : TestSuiteBase
 
         WriteRandomLogMessageAndAssertItInFile(
             context,
-            Path.Combine(AtataContext.ResolveCurrent().ArtifactsPath, fileName));
+            Path.Combine(context.ArtifactsPath, fileName));
     }
 
     [Test]
