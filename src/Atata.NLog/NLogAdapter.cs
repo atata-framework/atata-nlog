@@ -4,14 +4,14 @@ internal static class NLogAdapter
 {
     private static readonly object s_configurationSyncLock = new();
 
-    internal static FileTarget CreateFileTarget(string name, string filePath, string layout) =>
-        new(name)
+    internal static FileTarget CreateFileTarget(string targetName, string filePath, string layout) =>
+        new(targetName)
         {
             FileName = Layout.FromString(filePath),
             Layout = Layout.FromString(layout)
         };
 
-    internal static void AddConfigurationRuleForAllLevels(Target target, string loggerNamePattern)
+    internal static LoggingRule AddConfigurationRuleForAllLevels(string ruleName, Target target, string loggerNamePattern)
     {
         lock (s_configurationSyncLock)
         {
@@ -23,15 +23,32 @@ internal static class NLogAdapter
                 NLogManager.Configuration = configuration;
             }
 
-            configuration.AddRuleForAllLevels(target, loggerNamePattern);
+            LoggingRule loggingRule = new(loggerNamePattern, NLogLevel.Trace, NLogLevel.Fatal, target)
+            {
+                Final = true,
+                RuleName = ruleName
+            };
+
+            configuration.AddRule(loggingRule);
 
             NLogManager.ReconfigExistingLoggers();
+
+            return loggingRule;
+        }
+    }
+
+    internal static void RemoveConfigurationRule(LoggingRule rule)
+    {
+        lock (s_configurationSyncLock)
+        {
+            var configuration = NLogManager.Configuration!;
+            configuration.LoggingRules.Remove(rule);
         }
     }
 
     internal static NLogEventInfo CreateLogEventInfo(LogEventInfo eventInfo)
     {
-        var otherEventInfo = new NLogEventInfo
+        NLogEventInfo otherEventInfo = new()
         {
             TimeStamp = eventInfo.Timestamp,
             Level = ConvertLogLevel(eventInfo.Level),

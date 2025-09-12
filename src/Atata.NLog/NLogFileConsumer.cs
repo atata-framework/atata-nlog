@@ -5,14 +5,18 @@ namespace Atata.NLog;
 /// <summary>
 /// A log consumer that writes log to file using NLog.
 /// </summary>
-public class NLogFileConsumer : IInitializableLogConsumer
+public class NLogFileConsumer : IInitializableLogConsumer, IDisposable
 {
     /// <summary>
     /// The default file name, which is <c>"Trace.log"</c>.
     /// </summary>
     public const string DefaultFileName = "Trace.log";
 
+    private static int s_globalCounter;
+
     private Logger _logger = null!;
+
+    private LoggingRule _loggingRule = null!;
 
     /// <summary>
     /// Gets or sets the file name template.
@@ -34,12 +38,13 @@ public class NLogFileConsumer : IInitializableLogConsumer
 
     void IInitializableLogConsumer.Initialize(AtataContext context)
     {
-        string uniqueLoggerName = context.Id;
+        int loggerNumber = Interlocked.Increment(ref s_globalCounter);
+        string uniqueLoggerName = $"{nameof(NLogFileConsumer)}{loggerNumber}";
         string filePath = BuildFilePath(context);
 
         FileTarget target = NLogAdapter.CreateFileTarget(uniqueLoggerName, filePath, Layout);
 
-        NLogAdapter.AddConfigurationRuleForAllLevels(target, uniqueLoggerName);
+        _loggingRule = NLogAdapter.AddConfigurationRuleForAllLevels(uniqueLoggerName, target, uniqueLoggerName);
 
         _logger = NLogManager.GetLogger(uniqueLoggerName);
     }
@@ -56,6 +61,10 @@ public class NLogFileConsumer : IInitializableLogConsumer
             FileNameTemplate = FileNameTemplate,
             Layout = Layout
         };
+
+    [SuppressMessage("Usage", "CA1816:Dispose methods should call SuppressFinalize", Justification = "<Pending>")]
+    void IDisposable.Dispose() =>
+        NLogAdapter.RemoveConfigurationRule(_loggingRule);
 
     private string BuildFilePath(AtataContext context)
     {

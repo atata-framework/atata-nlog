@@ -42,6 +42,54 @@ public sealed class NLogFileConsumerTests : TestSuiteBase
     }
 
     [Test]
+    public void WithMinLevel()
+    {
+        // Arrange
+        var contextBuilder = ConfigureSessionlessAtataContext();
+
+        contextBuilder.LogConsumers.AddNLogFile(x => x
+            .WithMinLevel(LogLevel.Info).WithFileNameTemplate("Info.log"));
+
+        var context = contextBuilder.Build();
+
+        // Act
+        context.Log.Trace("TRACE Text");
+        context.Log.Info("INFO Text");
+
+        // Assert
+        AssertThatFileExistsAndReadItsText(Path.Combine(context.ArtifactsPath, "Info.log"))
+            .Should().Contain("INFO Text")
+            .And.NotContain("TRACE Text");
+    }
+
+    [Test]
+    public void UseTraceAndInfoConsumers()
+    {
+        // Arrange
+        var contextBuilder = ConfigureSessionlessAtataContext();
+
+        contextBuilder.LogConsumers.AddNLogFile();
+
+        contextBuilder.LogConsumers.AddNLogFile(x => x
+            .WithMinLevel(LogLevel.Info)
+            .WithFileNameTemplate("Info.log"));
+
+        using var context = contextBuilder.Build();
+
+        // Act
+        context.Log.Trace("TRACE Text");
+        context.Log.Info("INFO Text");
+
+        // Assert
+        AssertThatFileExistsAndReadItsText(Path.Combine(context.ArtifactsPath, NLogFileConsumer.DefaultFileName))
+            .Should().ContainAll("TRACE Text", "INFO Text");
+
+        AssertThatFileExistsAndReadItsText(Path.Combine(context.ArtifactsPath, "Info.log"))
+            .Should().Contain("INFO Text")
+            .And.NotContain("TRACE Text");
+    }
+
+    [Test]
     public void Log_WithSource() =>
         TestLog(x => x.ForSource("Ext").Trace("Text"), "TRACE {Ext} Text");
 
