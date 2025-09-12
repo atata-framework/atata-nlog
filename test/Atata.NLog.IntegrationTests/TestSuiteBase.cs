@@ -1,4 +1,4 @@
-namespace Atata.NLog.IntegrationTests;
+﻿namespace Atata.NLog.IntegrationTests;
 
 public abstract class TestSuiteBase
 {
@@ -36,13 +36,18 @@ public abstract class TestSuiteBase
 
     protected static void AssertThatFileShouldContainText(string filePath, params string[] texts)
     {
+        string fileContent = AssertThatFileExistsAndReadItsText(filePath);
+        fileContent.Should().ContainAll(texts);
+    }
+
+    protected static string AssertThatFileExistsAndReadItsText(string filePath)
+    {
         AssertThatFileExists(filePath);
 
         using FileStream fileStream = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
         using StreamReader reader = new(fileStream);
 
-        string fileContent = reader.ReadToEnd();
-        fileContent.Should().ContainAll(texts);
+        return reader.ReadToEnd();
     }
 
     private static string? GetCurrentTestFixtureName()
