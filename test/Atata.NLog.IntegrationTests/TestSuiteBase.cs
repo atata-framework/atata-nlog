@@ -1,7 +1,3 @@
-﻿using FluentAssertions;
-using NUnit.Framework.Interfaces;
-using NUnit.Framework.Internal;
-
 namespace Atata.NLog.IntegrationTests;
 
 public abstract class TestSuiteBase
