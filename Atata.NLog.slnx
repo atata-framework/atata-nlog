@@ -1,0 +1,20 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path=".gitattributes" />
+    <File Path=".gitignore" />
+    <File Path="azure-pipelines.codecoverage.runsettings" />
+    <File Path="azure-pipelines.release.yml" />
+    <File Path="azure-pipelines.runsettings" />
+    <File Path="azure-pipelines.yml" />
+    <File Path="CODE_OF_CONDUCT.md" />
+    <File Path="CONTRIBUTING.md" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Build.targets" />
+    <File Path="en-US_User.dic" />
+    <File Path="LICENSE" />
+    <File Path="README.md" />
+  </Folder>
+  <Project Path="src/Atata.NLog/Atata.NLog.csproj" />
+  <Project Path="test/Atata.NLog.IntegrationTests/Atata.NLog.IntegrationTests.csproj" />
+</Solution>
