@@ -11,7 +11,7 @@ public static class NLogConsumerBuilderExtensions
 {
     /// <summary>
     /// Sets the file name template of the log file.
-    /// The default value is <c>"Trace.log"</c>.
+    /// The default value is <c>"Atata.log"</c>.
     /// </summary>
     /// <param name="builder">The builder.</param>
     /// <param name="fileNameTemplate">The file name template.</param>

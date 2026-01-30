@@ -8,9 +8,9 @@ namespace Atata.NLog;
 public class NLogFileConsumer : IInitializableLogConsumer, IDisposable
 {
     /// <summary>
-    /// The default file name, which is <c>"Trace.log"</c>.
+    /// The default file name, which is <c>"Atata.log"</c>.
     /// </summary>
-    public const string DefaultFileName = "Trace.log";
+    public const string DefaultFileName = "Atata.log";
 
     private static int s_globalCounter;
 
@@ -20,7 +20,7 @@ public class NLogFileConsumer : IInitializableLogConsumer, IDisposable
 
     /// <summary>
     /// Gets or sets the file name template.
-    /// The default value is <c>"Trace.log"</c>.
+    /// The default value is <c>"Atata.log"</c>.
     /// </summary>
     public string FileNameTemplate { get; set; } = DefaultFileName;
 
