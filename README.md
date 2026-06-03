@@ -9,6 +9,101 @@
 
 *The package targets .NET 8.0 and .NET Framework 4.6.2.*
 
+## Installation
+
+Install the package via .NET CLI:
+
+```bash
+dotnet add package Atata.NLog
+```
+
+Or using Package Manager:
+
+```powershell
+Install-Package Atata.NLog
+```
+
+## Dependencies
+
+- [Atata](https://www.nuget.org/packages/Atata)
+- [NLog](https://www.nuget.org/packages/NLog)
+
+## Usage
+
+In order to add NLog logging to Atata,
+call `AddNLog` (to use *NLog.config*) or `AddNLogFile` (no config file needed) extension method on the "base" `LogConsumersBuilder` instance in `GlobalFixture`.
+
+```cs
+public sealed class GlobalFixture : AtataGlobalFixture
+{
+    protected override void ConfigureAtataContextBaseConfiguration(AtataContextBuilder builder)
+    {
+        builder.LogConsumers.AddNLogFile();
+    }
+}
+```
+
+Also you can configure some of the settings:
+
+```cs
+builder.LogConsumers.AddNLogFile(x => x
+    .WithMinLevel(LogLevel.Info)
+    .WithFileNameTemplate("Info.log"));
+```
+
+## API
+
+### `NLogConsumersBuilderExtensions`
+
+Provides NLog extension methods for `LogConsumersBuilder`.
+
+```cs
+public static class NLogConsumersBuilderExtensions
+{
+    // Adds the NLogConsumer instance that uses NLog.Logger class for logging.
+    public static AtataContextBuilder AddNLog(
+        this LogConsumersBuilder builder,
+        Action<LogConsumerBuilder<NLogConsumer>>? configure = null);
+
+    // Adds the NLogFileConsumer instance that uses NLog.Logger class for logging into file.
+    public static AtataContextBuilder AddNLogFile(
+        this LogConsumersBuilder builder,
+        Action<LogConsumerBuilder<NLogFileConsumer>>? configure = null);
+}
+```
+
+### `NLogConsumerBuilderExtensions`
+
+Provides NLog extension methods for `LogConsumerBuilder<TLogConsumer>`.
+
+```cs
+public static class NLogConsumerBuilderExtensions
+{
+    // Sets the file name template of the log file.
+    // The default value is "Atata.log".
+    public static LogConsumerBuilder<NLogFileConsumer> WithFileNameTemplate(
+        this LogConsumerBuilder<NLogFileConsumer> builder,
+        string fileNameTemplate);
+
+    // Specifies the layout of log event.
+    // The default value is @"${event-property:time-elapsed:format=hh\\\:mm\\\:ss\\.fff} ${event-property:execution-unit-id} ${uppercase:${level}:padding=5} ${event-property:log-nesting-text}${when:when='${event-property:log-source}'!='':inner={${event-property:log-source}\} }${when:when='${event-property:log-category}'!='':inner=[${event-property:log-category}] }${when:when='${message}'!='':inner=${message}${onexception:inner= }${exception:format=ToString:flattenException=false}:else=${exception:format=ToString:flattenException=false}".
+    // If you want to replace "time elapsed" column in layout with "timestamp", you can replace the value
+    // "{event-property:time-elapsed:format=hh\\\:mm\\\:ss\\.fff}" with
+    // "{date:format=yyyy-MM-dd HH\:mm\:ss.fff}".
+    public static LogConsumerBuilder<NLogFileConsumer> WithLayout(
+        this LogConsumerBuilder<NLogFileConsumer> builder,
+        string layout);
+
+    // Specifies to use separate log files for log sources.
+    // The main log file will be "Atata.log".
+    // Source log file will be "{source}.log", e.g., "Browser.log", "App.log".
+    // Sets "${{event-property:log-source:whenEmpty=Atata}}.log" to NLogFileConsumer.FileNameTemplate.
+    // Sets @"${event-property:time-elapsed:format=hh\\\:mm\\\:ss\\.fff} ${event-property:execution-unit-id} ${uppercase:${level}:padding=5} ${event-property:log-nesting-text}${when:when='${event-property:log-category}'!='':inner=[${event-property:log-category}] }${when:when='${message}'!='':inner=${message}${onexception:inner= }${exception:format=ToString:flattenException=false}:else=${exception:format=ToString:flattenException=false}" to NLogFileConsumer.Layout.
+    public static LogConsumerBuilder<NLogFileConsumer> WithSeparateSourceLogFiles(
+        this LogConsumerBuilder<NLogFileConsumer> builder);
+}
+```
+
 ## Community
 
 - Slack: [https://atata-framework.slack.com](https://join.slack.com/t/atata-framework/shared_invite/zt-5j3lyln7-WD1ZtMDzXBhPm0yXLDBzbA)
