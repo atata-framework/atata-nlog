@@ -20,4 +20,4 @@ Initial version release.
 - Add `NLogConsumer` class.
 - Add `NLogFileConsumer` class.
 
-[Unreleased]: https://github.com/atata-framework/atata-htmlvalidation/compare/v4.0.0...HEAD
+[Unreleased]: https://github.com/atata-framework/atata-nlog/compare/v4.0.0...HEAD
