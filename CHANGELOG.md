@@ -7,7 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## 4.0.0 - 2026-09-07
+### Changed
+
+- Upgrade Atata package reference to v4.0.1.
+
+## [4.0.0] - 2026-09-07
 
 Initial version release.
 
@@ -21,3 +25,4 @@ Initial version release.
 - Add `NLogFileConsumer` class.
 
 [Unreleased]: https://github.com/atata-framework/atata-nlog/compare/v4.0.0...HEAD
+[4.0.0]: https://github.com/atata-framework/atata-nlog/releases/tag/v4.0.0
